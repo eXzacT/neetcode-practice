@@ -7,8 +7,8 @@ class TreeNode:
         self.left=None
         self.right=None
 
-#iteratively
-#like array = [1, 2, 2, 3, None, None, 3, 4, None,None, 4]
+# Iteratively
+# For arrays of type array = [1, 2, 2, 3, None, None, 3, 4, None,None, 4]
 def init_tree_iteratively(array)->TreeNode:
     if array is None:
         return None
@@ -28,8 +28,8 @@ def init_tree_iteratively(array)->TreeNode:
 
     return root
 
-#iteratively
-#like array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
+# Iteratively
+# For arrays of type array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
 def init_tree_iteratively_with_placeholders(array)->TreeNode:
     if not array:
         return None
@@ -62,8 +62,8 @@ def init_tree_iteratively_with_placeholders(array)->TreeNode:
 
     return root
 
-#recursively
-#like array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
+# Recursively
+# For arrays of type array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
 def init_tree_recursively(array,index=0)->TreeNode:
     if index >= len(array) or array[index] is None:
         return None
@@ -86,14 +86,14 @@ def invert_tree(root:TreeNode)->TreeNode:
 
     return root
 
-#calculate max depth of the tree
-def depth(root:TreeNode):
+# Calculate max depth(height) of the tree
+def depth(root:TreeNode)->int:
     if root is None:
         return 0
     return 1+(max(depth(root.left),depth(root.right)))
 
-#print the tree in a visual way
-def print_tree(root:TreeNode):
+# Print the tree in a visual way
+def print_tree(root:TreeNode)->None:
     if root is None:
         return None
 
@@ -124,7 +124,7 @@ def print_tree(root:TreeNode):
     for line in output:
         print(line)
 
-""" def print_tree(root:TreeNode):
+""" def print_tree(root:TreeNode)->None:
     if root is None:
         return None
     queue=deque([root])
@@ -136,8 +136,8 @@ def print_tree(root:TreeNode):
         if node.right:
             queue.append(node.right) """
 
-#generate a png image of a tree
-def visualize_binary_tree(root):
+# Generate a png image of a tree
+def visualize_binary_tree(root:TreeNode)->None:
     if root is None:
         print("The tree is empty.")
         return
@@ -167,9 +167,13 @@ def visualize_binary_tree(root):
     add_nodes_edges(root)
     dot.render('binary_tree', view=True, format='png')
 
-def diameter(root)->int:
-    max_diameter = [0]  # Using a list here so it's passed by reference
+# Calculate max diameter of a tree
+# The distance between the furthest nodes, so the addition of their each respective depths)
+def diameter(root:TreeNode)->int:
+    max_diameter = [0]  # Using a list because it's mutable(height can manipulate its contents and keep them)
 
+    # Helper function which gets max height of a tree, we are also changing max diameter inside it, which equals to 
+    # Maximum left+right height
     def height(node):
         if not node:
             return 0
@@ -181,26 +185,32 @@ def diameter(root)->int:
     height(root)
     return max_diameter[0]
 
+# Check if the trees are balanced
+# Meaning the difference in the heights of LEFT and RIGHT subtrees for EACH node is NO MORE than 1.
 def isBalanced(root:TreeNode)->bool:
     def dfs(root):
-        if not root:return [True,0]
+        if not root:
+            return [True,0]
         left,right=dfs(root.left),dfs(root.right)
         balanced=(left[0] and right[0] and 
                   abs(left[1]-right[1])<=1)
         return [balanced,1+max(left[1],right[1])]
     return dfs(root)[0]
 
+# Check if the trees are same
+# Meaning both their structure and values of each node are the same
 def areSame(root1:TreeNode,root2:TreeNode)->bool:
     if root1 is None or root2 is None:
+        #make sure the nodes are equal if one of them is None(so they are both None)
         return root1==root2
     return root1.value==root2.value and areSame(root1.left,root2.left) and areSame(root1.right,root2.right)
 
-array=[1,2,2,3,None,None,3,4,None,None,500]
-array=[5, 3, 7, 2, None, 2, 8,9,10,11,123]
-array=[5, 3, 7, 1, 4, None, 8,2,None,3,4,2,2,3,4]
+
+array = [1, 2, 2, 3, None, None, 3, 4, None, None, 500]
+array = [5, 3, 7, 2, None, 2, 8, 9, 10, 11, 123]
+array = [5, 3, 7, 1, 4, None, 8, 2, None, 3, 4 , 2 , 2, 3, 4]
 array = [1, 2, 2, 3, None, None, 3, 4, None, None, 4]
 array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
-
 tree=init_tree_iteratively_with_placeholders(array)
 print_tree(tree)
 tree=init_tree_recursively(array)
