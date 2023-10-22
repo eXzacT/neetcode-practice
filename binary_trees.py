@@ -199,12 +199,64 @@ def isBalanced(root:TreeNode)->bool:
 
 # Check if the trees are same
 # Meaning both their structure and values of each node are the same
-def areSame(root1:TreeNode,root2:TreeNode)->bool:
+def areSameRecursively(root1: TreeNode,root2: TreeNode)->bool:
+    
+    #make sure the nodes are equal if one of them is None(so they are both None)
     if root1 is None or root2 is None:
-        #make sure the nodes are equal if one of them is None(so they are both None)
         return root1==root2
-    return root1.value==root2.value and areSame(root1.left,root2.left) and areSame(root1.right,root2.right)
+    return root1.value==root2.value and areSameRecursively(root1.left,root2.left) and areSameRecursively(root1.right,root2.right)
 
+# Iterative version of the above function
+def areSameIteratively(root1: TreeNode, root2: TreeNode)->bool:
+    queue=deque([(root1,root2)])
+    while queue:
+        root1, root2 = queue.popleft()
+        
+        # If either root2 or root1 is None, then both should be None
+        if not root2 or not root1:
+            if root1 != root2:
+                return False
+            continue
+        
+        if root1.value != root2.value:
+            return False
+    
+        queue.append([root1.left,root2.left])
+        queue.append([root1.right,root2.right])
+        
+    return True
+
+# Check if a tree is a subtree of another tree
+def isSubtreeRecursively(subTree: TreeNode, mainTree: TreeNode) -> bool:
+    if not mainTree:
+        return False
+    if not subTree:
+        return True
+
+    # First check both full trees then check left and right subtrees
+    return areSameRecursively(mainTree,subTree) or isSubtreeRecursively(subTree,mainTree.left) or isSubtreeRecursively(subTree,mainTree.right)
+
+# Iterative version of the above function
+def isSubtreeIteratively(subTree: TreeNode, mainTree: TreeNode) -> bool:
+    if not subTree:
+        return True
+    if not mainTree:
+        return False
+
+    queue = deque([mainTree])
+    
+    while queue:
+        currentNode = queue.popleft()
+        
+        if currentNode is not None and currentNode.value==subTree.value:
+            return areSameIteratively(currentNode, subTree)
+        
+        # Otherwise, continue with the traversal of mainTree, we will compare the children to subTree root next run
+        if currentNode:
+            queue.append(currentNode.left)
+            queue.append(currentNode.right) 
+    
+    return False
 
 array = [1, 2, 2, 3, None, None, 3, 4, None, None, 500]
 array = [5, 3, 7, 2, None, 2, 8, 9, 10, 11, 123]
@@ -222,12 +274,25 @@ tree2=invert_tree(tree)
 print_tree(tree2)
 
 print("Trees are"+
-      (" not" if not  areSame(tree1,tree2) else "")
+      (" not" if not  areSameIteratively(tree1,tree2) else "")
       +" the same")
-   
+
+print("Trees are"+
+      (" not" if not  areSameRecursively(tree1,tree2) else "")
+      +" the same")   
+
 print("Tree is"+
       (" not" if not isBalanced(tree) else "")
       +" balanced")
 print("Diameter of this tree using diameter2 function is",diameter(tree))
 print("Depth of this tree is",depth(tree))
+
+tree1=init_tree_recursively([3,4,5,1,2])
+tree2=init_tree_recursively([4,1,2])
+print("Iteratively", isSubtreeIteratively(tree2,tree1))
+print("Recursively", isSubtreeRecursively(tree2,tree1))
+tree1=init_tree_recursively([3,4,5,1,2,None,None,None,None,0])
+tree2=init_tree_recursively([4,1,2])
+print("Iteratively", isSubtreeIteratively(tree2,tree1))
+print("Recursively", isSubtreeRecursively(tree2,tree1))
 #visualize_binary_tree(tree)
