@@ -58,7 +58,7 @@ binary_trees = [
     }
 ]
 
-intervals = [
+intervals_with_new = [
     {
         "intervals": [[1, 3], [6, 9]],
         "new_interval": [2, 5],
@@ -73,6 +73,45 @@ intervals = [
         "intervals": [[1, 2], [3, 5], [6, 7], [8, 10], [12, 16], [18, 20]],
         "new_interval": [4, 8],
         "output": [[1, 2], [3, 10], [12, 16], [18, 20]]
+    },
+    {
+        "intervals": [[5, 6], [8, 9], [10, 11]],
+        "new_interval": [4, 8],
+        "output": [[4, 9], [10, 11]]
+    },
+    {
+        "intervals": [[5, 6], [8, 9], [10, 11]],
+        "new_interval": [2, 3],
+        "output": [[2, 3], [5, 6], [8, 9], [10, 11]]
+    },
+    {
+        "intervals": [[5, 6], [8, 9], [10, 11]],
+        "new_interval": [12, 14],
+        "output": [[5, 6], [8, 9], [10, 11], [12, 14]]
+    },
+    {
+        "intervals": [[8, 9], [5, 6], [10, 11]],
+        "new_interval": [12, 14],
+        "output": [[5, 6], [8, 9], [10, 11], [12, 14]]
+    }
+]
+
+intervals_without_new = [
+    {
+        "intervals": [[1, 4], [6, 7], [9, 11], [2, 11]],
+        "output": [[1, 11]]
+    },
+    {
+        "intervals": [[1, 4], [3, 5], [4, 7]],
+        "output": [[1, 7]]
+    },
+    {
+        "intervals": [[5, 6], [1, 6], [4, 11], [12, 14]],
+        "output": [[1, 11], [12, 14]]
+    },
+    {
+        "intervals": [[8, 9], [6, 7], [10, 11]],
+        "output": [[6, 7], [8, 9], [10, 11]]
     }
 ]
 
@@ -185,13 +224,16 @@ def test_binary_trees():
         assert_equals(tree['is_balanced'], is_balanced(tree1))
 
 
-def test_intervals():
-    """ Runs all the tests for intervals 2023-10-25 14:00:34 """
+def test_intervals(intervals, func, has_new_interval=True):
+    """ Runs all the tests for intervals """
     for interval in intervals:
-        test = str(interval["intervals"])+" New interval " + \
-            str(interval["new_interval"])
-        result = insert_into_intervals(
-            interval['intervals'], interval['new_interval'])
+        if has_new_interval:
+            test = str(interval["intervals"])+" New interval " + \
+                str(interval["new_interval"])
+            result = func(interval['intervals'], interval['new_interval'])
+        else:
+            test = str(interval["intervals"])
+            result = func(interval["intervals"])
         expected_result = interval['output']
         assert_equals(test, expected_result, result)
 
@@ -199,9 +241,10 @@ def test_intervals():
 # run all the tests
 # test_meeting()
 # test_binary_trees()
-test_intervals()
+test_intervals(intervals_with_new, insert_into_intervals)
+test_intervals(intervals_without_new, merge_intervals, has_new_interval=False)
 
-print(f"\nTotal tests ran: {total_tests}\n"
+print(f"Total tests ran: {total_tests}\n"
       + Fore.GREEN
       + f"Passed: {total_passed_tests}\n"
       + (Fore.RED + f"Failed: {total_tests - total_passed_tests} " if total_tests -
