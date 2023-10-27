@@ -99,19 +99,29 @@ intervals_with_new = [
 intervals_without_new = [
     {
         "intervals": [[1, 4], [6, 7], [9, 11], [2, 11]],
-        "output": [[1, 11]]
+        "output": [[1, 11]],
+        # How many do we need to remove in order for others not to overlap (27/10/2023)
+        "overlaping": 1
     },
     {
         "intervals": [[1, 4], [3, 5], [4, 7]],
-        "output": [[1, 7]]
+        "output": [[1, 7]],
+        "overlaping": 1
     },
     {
         "intervals": [[5, 6], [1, 6], [4, 11], [12, 14]],
-        "output": [[1, 11], [12, 14]]
+        "output": [[1, 11], [12, 14]],
+        "overlaping": 2
     },
     {
         "intervals": [[8, 9], [6, 7], [10, 11]],
-        "output": [[6, 7], [8, 9], [10, 11]]
+        "output": [[6, 7], [8, 9], [10, 11]],
+        "overlaping": 0
+    },
+    {
+        "intervals": [[8, 11], [1, 3], [4, 6], [1, 7], [4, 5], [8, 9], [10, 12]],
+        "output": [[1, 7], [8, 12]],
+        "overlaping": 3
     }
 ]
 
@@ -230,12 +240,14 @@ def test_intervals(intervals, func, has_new_interval=True):
         if has_new_interval:
             test = str(interval["intervals"])+" New interval " + \
                 str(interval["new_interval"])
-            result = func(interval['intervals'], interval['new_interval'])
+            assert_equals(test, interval["output"], insert_into_intervals(
+                interval["intervals"], interval["new_interval"]))
         else:
             test = str(interval["intervals"])
-            result = func(interval["intervals"])
-        expected_result = interval['output']
-        assert_equals(test, expected_result, result)
+            assert_equals(test, interval["overlaping"],
+                          count_overlaping_intervals(interval["intervals"]))
+            assert_equals(test, interval["output"], merge_intervals(
+                interval["intervals"]))
 
 
 # run all the tests
