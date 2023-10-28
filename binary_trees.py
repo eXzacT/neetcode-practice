@@ -11,22 +11,21 @@ class TreeNode:
 
 def init_tree(array: list, method: str) -> TreeNode:
     match method:
-        case 'implicit_input_iteratively':
+        case 'implicit_iteratively':
             root = init_implicit_tree_iteratively(array)
-        case 'implicit_input_recursively':
-            root = init_implicit_tree_recursively(array)
-        case 'explicit_input':
+        case 'explicit_iteratively':
             root = init_explicit_tree_iteratively(array)
+        case 'explicit_recursively':
+            root = init_explicit_tree_recursively(array)
         case _:
             raise ValueError("Invalid method")
 
     return root
 
-# Works for arrays of type array = [1, 2, 2, 3, None, None, 3, 4, None,None, 4]
-
 
 def init_implicit_tree_iteratively(array) -> TreeNode:
     """ Initiates binary tree iteratively """
+    # Works for implicit type array = [1, 2, 2, 3, None, None, 3, 4, None,None, 4]
     if array is None:
         return None
     root = TreeNode(array[0])
@@ -45,12 +44,11 @@ def init_implicit_tree_iteratively(array) -> TreeNode:
 
     return root
 
-# Works for arrays of type array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
-# but not for type array = [1, 2, 2, 3, None, None, 3, 4, None,None, 4]
-
 
 def init_explicit_tree_iteratively(array) -> TreeNode:
     """ Initiates binary tree iteratively """
+    # Works for explicit type array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
+    # but not implicit = [1, 2, 2, 3, None, None, 3, 4, None,None, 4]
     def attach_node(parent, child_value, position):
         if child_value is not None:
             child = TreeNode(child_value)
@@ -82,16 +80,15 @@ def init_explicit_tree_iteratively(array) -> TreeNode:
 
     return root
 
-# Works for arrays of type array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
 
-
-def init_implicit_tree_recursively(array, index=0) -> TreeNode:
+def init_explicit_tree_recursively(array, index=0) -> TreeNode:
     """ Initiates binary tree recursively """
+    # Works for explicit type array = [1, 2, 2, 3, None, None, 3, 4, None, None, None, None, None, None, 4]
     if index >= len(array) or array[index] is None:
         return None
     root = TreeNode(array[index])
-    root.left = init_implicit_tree_recursively(array, 2*index+1)
-    root.right = init_implicit_tree_recursively(array, 2*index+2)
+    root.left = init_explicit_tree_recursively(array, 2*index+1)
+    root.right = init_explicit_tree_recursively(array, 2*index+2)
 
     return root
 
@@ -183,7 +180,7 @@ def tree_to_array(root: TreeNode) -> list:
 
 
 def visualize_binary_tree(root: TreeNode) -> None:
-    """ Generate a png image of a tree 2023-10-25 13:14:57 """
+    """ Generate a png image of a tree (25/10/2023) """
     if root is None:
         print("The tree is empty.")
         return
@@ -215,7 +212,7 @@ def visualize_binary_tree(root: TreeNode) -> None:
 
 
 def diameter(root: TreeNode) -> int:
-    """ Calculate the max diameter of a tree 2023-10-25 13:15:58 """
+    """ Calculate the max diameter of a tree (25/10/2023) """
     # Using a list because it's mutable(height can manipulate its contents and keep them)
     max_diameter = [0]
 
@@ -234,7 +231,7 @@ def diameter(root: TreeNode) -> int:
 
 
 def is_balanced(root: TreeNode) -> bool:
-    """ If the difference in heights of each LEFT and RIGHT subtree is not more than 1 2023-10-25 13:16:29 """
+    """ If the difference in heights of each LEFT and RIGHT subtree is not more than 1 (25/10/2023) """
     def dfs(root):
         if not root:
             return [True, 0]
@@ -246,7 +243,7 @@ def is_balanced(root: TreeNode) -> bool:
 
 
 def are_same_recursively(root1: TreeNode, root2: TreeNode) -> bool:
-    """ Check if structure of both trees and values are the same 2023-10-25 13:17:25 """
+    """ Check if structure of both trees and values are the same (25/10/2023) """
 
     # make sure the nodes are equal if one of them is None(so they are both None)
     if root1 is None or root2 is None:
@@ -255,7 +252,7 @@ def are_same_recursively(root1: TreeNode, root2: TreeNode) -> bool:
 
 
 def are_same_iteratively(root1: TreeNode, root2: TreeNode) -> bool:
-    """ Iterative version of the above function 2023-10-25 13:17:54 """
+    """ Iterative version of the above function (25/10/2023) """
     queue = deque([(root1, root2)])
     while queue:
         root1, root2 = queue.popleft()
@@ -276,7 +273,7 @@ def are_same_iteratively(root1: TreeNode, root2: TreeNode) -> bool:
 
 
 def is_subtree_recursively(sub_tree: TreeNode, main_tree: TreeNode) -> bool:
-    """ Checks if a tree is a subtree of another tree 2023-10-25 13:18:08 """
+    """ Checks if a tree is a subtree of another tree (25/10/2023) """
     if not main_tree:
         return False
     if not sub_tree:
@@ -287,7 +284,7 @@ def is_subtree_recursively(sub_tree: TreeNode, main_tree: TreeNode) -> bool:
 
 
 def is_subtree_iteratively(sub_tree: TreeNode, main_tree: TreeNode) -> bool:
-    """ Iterative version of the above function 2023-10-25 13:18:26 """
+    """ Iterative version of the above function (25/10/2023) """
     if not sub_tree:
         return True
     if not main_tree:
