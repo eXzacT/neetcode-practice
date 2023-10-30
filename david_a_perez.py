@@ -1,6 +1,8 @@
 import random
 import string
 
+ascii = {char: ord(char) - 96 for char in string.ascii_lowercase}
+
 
 def david_a_perez(input: string) -> int:
     """
@@ -19,7 +21,6 @@ def david_a_perez(input: string) -> int:
          If no such slice is found, it returns None.
     """
 
-    ascii = {char: ord(char) - 96 for char in string.ascii_lowercase}
     i = 0
     while i + 14 <= len(input):
         slice = input[i:i + 14]
@@ -32,10 +33,27 @@ def david_a_perez(input: string) -> int:
                 i += 1
                 break
             state |= 1 << alphabet_pos
+        # If we get to this else it means that the loop finished without encountering a duplicate (30/10/2023)
         else:
-            if bin(state).count('1') == 14:
-                return i
-            i += 1
+            return i
+
+    return None
+
+
+def process_string(input_string):
+    i = 0
+    while i + 14 <= len(input_string):
+        slice = input_string[i:i + 14]
+        state = set()
+
+        for letter in reversed(slice):
+            if letter in state:
+                i += 1
+                break
+            else:
+                state.add(letter)
+        else:
+            return i
 
     return None
 
