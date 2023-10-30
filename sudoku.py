@@ -1,7 +1,7 @@
-from typing import List
+from typing import List, Tuple
 
 
-def validate_sudoku_board(board: List[List[int]]) -> bool:
+def validate_sudoku_board(board: List[List[int]]) -> Tuple[bool, str]:
     """
     Validates a Sudoku board.
 
@@ -9,8 +9,11 @@ def validate_sudoku_board(board: List[List[int]]) -> bool:
     board (List[List[int]]): A 2D list representing a Sudoku board.
 
     Returns:
-    bool: True if the board is valid, False otherwise.
-    string: empty message if True, otherwise info about where the duplication happened
+    Tuple[bool, str]: A tuple where the first element is a boolean indicating 
+                      whether the board is valid (True) or not (False), and 
+                      the second element is a string that is empty if the board 
+                      is valid, or contains information about where the duplication 
+                      occurred if the board is invalid.
     """
 
     rows = [set() for _ in range(9)]
