@@ -1,6 +1,3 @@
-from collections import Counter
-
-
 def insert_new_into_intervals(new_interval, intervals):
 
     res = []

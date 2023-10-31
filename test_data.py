@@ -145,3 +145,18 @@ sudoku_boards = [
         "is_valid": False
     },
 ]
+
+arrays_strings = [
+    {
+        "array": ["pero", "dijetlic", "majmun"]
+    },
+    {
+        "array": ["per076", "ver123", "serial"]
+    },
+    {
+        "array": ["sd!30", "slx42", "xA310!"]
+    },
+    {
+        "array": ["s23#!30", "slx42", "xA310!"]
+    }
+]

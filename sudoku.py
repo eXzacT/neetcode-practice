@@ -1,7 +1,4 @@
-from typing import List, Tuple
-
-
-def validate_sudoku_board(board: List[List[int]]) -> Tuple[bool, str]:
+def validate_sudoku_board(board: list[list[int]]) -> tuple[bool, str]:
     """
     Validates a Sudoku board.
 
