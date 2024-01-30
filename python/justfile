@@ -1,0 +1,5 @@
+create filename:
+    python create_file.py {{filename}}
+
+work filename:
+    python watch_file.py {{filename}}
