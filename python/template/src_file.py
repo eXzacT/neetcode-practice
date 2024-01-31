@@ -5,5 +5,5 @@ else:
 
 
 @time_execution()
-def filename(num: int) -> int:
+def sol(num: int) -> int:
     pass
