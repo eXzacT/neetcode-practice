@@ -3,6 +3,9 @@ if __name__ == "__main__":
 else:
     from src.common import time_execution
 
+'''Given a 1-indexed array of integers numbers that is already sorted in non-decreasing order, 
+    find two numbers such that they add up to a specific target number.'''
+
 
 @time_execution()
 def two_sum_naive(nums: list[int], target: int) -> list[int]:

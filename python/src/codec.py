@@ -1,35 +1,19 @@
-class Codec():
+def encode(strs: list[str]) -> str:
+    return ''.join(map(lambda s: f"#{len(s)}{s}", strs))
 
-    def encode(self, input_string: list[str]) -> str:
-        """ Converting a list of strings into one string, and before each word adding the length and # sign (31/10/2023) """
-        encoded_string = ""
 
-        for string in input_string:
-            encoded_string += str(len(string)) + "#" + string
+def decode(s: str) -> list[str]:
+    idx = 1
+    res = []
 
-        return encoded_string
+    while idx < len(s):
+        str_len = int(s[idx])
+        word = s[idx+1:idx+1+str_len]
+        res.append(word)
+        idx += str_len+2
 
-    def decode(self, encoded_string: str) -> list[str]:
-        """ Decoding the encoded string back to original (31/10/2023)
-            This is done by going through the string and finding out how long the encoded word is,
-            then just adding the slice of the same length into a new array of words
-        """
+    return res
 
-        decoded_string = []
-        i = previous_word_end = 0
 
-        while i < len(encoded_string):
-            if encoded_string[i] == '#':
-
-                # The slice from previous word ending to '#' sign is representing length of the next string (31/10/2023)
-                string_length = int(encoded_string[previous_word_end:i])
-                i += 1  # Skip the '#' sign (31/10/2023)
-
-                # Add the string to the array of strings, skip the entire string and remember its end position (31/10/2023)
-                decoded_string.append(encoded_string[i:i+string_length])
-                i += string_length
-                previous_word_end = i
-
-            i += 1
-
-        return decoded_string
+def sol(strs: list[str]) -> str:
+    return decode(encode(strs))

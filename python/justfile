@@ -1,5 +1,6 @@
 create filename:
     python create_file.py {{filename}}
+    just work {{filename}}
 
 work filename:
     python watch_file.py {{filename}}
