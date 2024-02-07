@@ -29,24 +29,24 @@ def sol_n(prices: list[int]) -> int:
 
 @time_execution(executions=1000)
 def sol_n_space_time_optimized(prices: list[int]) -> int:
-    l, r = 0, 1
     max_profit = 0
-    while l < len(prices) and r < len(prices):
-        if prices[l] < prices[r]:
-            max_profit = max(prices[r]-prices[l], max_profit)
-        else:  # We found a cheaper day to buy since right is smaller than left
-            l = r
-        r += 1
+    min_price = prices[0]
+    for i in range(1, len(prices)):
+        max_profit = max(max_profit, prices[i]-min_price)
+        min_price = min(min_price, prices[i])
 
     return max_profit
 
 
 @time_execution(executions=1000)
 def sol_n_space_time_optimized_v2(prices: list[int]) -> int:
+    l, r = 0, 1
     max_profit = 0
-    min_price = prices[0]
-    for i in range(1, len(prices)):
-        max_profit = max(max_profit, prices[i]-min_price)
-        min_price = min(min_price, prices[i])
+    while r < len(prices):
+        if prices[l] < prices[r]:
+            max_profit = max(prices[r]-prices[l], max_profit)
+        else:  # We found a cheaper day to buy since right is smaller than left
+            l = r
+        r += 1
 
     return max_profit
