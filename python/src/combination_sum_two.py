@@ -17,7 +17,7 @@ def sol_naive(candidates: list[int], target: int) -> list[list[int]]:
         if remainder == 0:
             combinations.add(tuple(combination))
             return
-        if i == len(candidates) or remainder < 0:
+        if i == len(candidates) or candidates[i] > remainder or remainder < 0:
             return
 
         helper(remainder-candidates[i], i+1, combination+[candidates[i]])
@@ -40,8 +40,7 @@ def sol_optimized(candidates: list[int], target: int) -> list[list[int]]:
         if remainder == 0:
             combinations.append(combination)
             return
-
-        if i == len(candidates) or remainder < 0:
+        if i == len(candidates) or candidates[i] > remainder or remainder < 0:
             return
 
         helper(remainder-candidates[i], i+1, combination+[candidates[i]])
@@ -64,8 +63,7 @@ def sol_optimized_v2(candidates: list[int], target: int) -> list[list[int]]:
         if remainder == 0:
             combinations.append(combination[:])
             return
-
-        if i == len(candidates) or remainder < 0:
+        if i == len(candidates) or candidates[i] > remainder or remainder < 0:
             return
 
         combination.append(candidates[i])
@@ -91,8 +89,7 @@ def sol_optimized_v3(candidates: list[int], target: int) -> list[list[int]]:
         if remainder == 0:
             combinations.append(combination[:])
             return
-
-        if i == len(candidates) or remainder < 0:
+        if i == len(candidates) or candidates[i] > remainder or remainder < 0:
             return
 
         combination.append(candidates[i])
@@ -113,7 +110,7 @@ def sol_optimized_v4(candidates: list[int], target: int) -> list[list[int]]:
     candidates = sorted(candidates)
     combinations = []
 
-    def backtrack(remainder: int, idx: int, combination: list[int]) -> None:
+    def helper(remainder: int, idx: int, combination: list[int]) -> None:
         if remainder == 0:
             combinations.append(combination[:])
             return
@@ -122,12 +119,14 @@ def sol_optimized_v4(candidates: list[int], target: int) -> list[list[int]]:
 
         prev = -1
         for i in range(idx, len(candidates)):
+            if candidates[i] > remainder:
+                break
             if prev == candidates[i]:
                 continue
             combination.append(candidates[i])
-            backtrack(remainder - candidates[i], i+1, combination)
+            helper(remainder - candidates[i], i+1, combination)
             combination.pop()
             prev = candidates[i]
 
-    backtrack(target, 0, [])
+    helper(target, 0, [])
     return combinations
