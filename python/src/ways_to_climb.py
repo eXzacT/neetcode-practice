@@ -127,3 +127,73 @@ def sol_nx(n: int) -> int:
 
     helper(n)
     return len(list(nx.all_simple_paths(G, source=n, target=0)))
+
+
+''' Given stairs of length 'n', and a set of possible ways to jump,
+    What are all the ways we can climb to the top of those stairs?(permutations allowed)'''
+
+
+@time_execution()
+def ways_to_climb_dp(n: int, jumps: list[int]) -> int:
+    dp = [0]*(n+1)
+    dp[0] = 1  # 1 way to climb 0 stairs, just stay in place
+    for stair in range(n+1):
+        if dp[stair]:  # Can we even reach this stair?
+            for jump in jumps:
+                if (new := stair+jump) <= n:
+                    # To get to stair+jump we can use all the ways we got to stair
+                    dp[new] += dp[stair]
+
+    return dp[-1]
+
+
+@time_execution()
+def ways_to_climb_rec(n: int, jumps: list[int]) -> int:
+    def helper(remainder: int) -> int:
+        if remainder == 0:
+            return 1
+
+        count = 0
+        for jump in jumps:
+            if remainder-jump >= 0:
+                count += helper(remainder-jump)
+
+        return count
+
+    return helper(n)
+
+
+@time_execution()
+def ways_to_climb_memo(n: int, jumps: list[int]) -> int:
+    memo = {0: 1}
+
+    def helper(remainder: int) -> int:
+        if remainder in memo:
+            return memo[remainder]
+
+        count = 0
+        for jump in jumps:
+            if remainder-jump >= 0:
+                count += helper(remainder-jump)
+
+        memo[remainder] = count
+        return count
+
+    return helper(n)
+
+
+@time_execution()
+def ways_to_climb_nx(n: int, jumps: list[int]) -> int:
+    def helper(remainder: int) -> None:
+        if remainder == 0:
+            return
+
+        for jump in jumps:
+            if remainder-jump >= 0:
+                G.add_edge(remainder, remainder-jump)
+                helper(remainder-jump)
+
+    G = nx.DiGraph()
+    helper(n)
+
+    return len(list(nx.all_simple_paths(G, source=n, target=0)))

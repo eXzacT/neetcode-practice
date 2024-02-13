@@ -24,7 +24,7 @@ def sol_dp(nums: list[int]) -> int:
     return dp[-1]
 
 
-@time_execution()
+@time_execution(executions=1000)
 def sol_dp_v2(nums: list[int]) -> int:
     if len(nums) == 1:
         return nums[0]
@@ -35,6 +35,27 @@ def sol_dp_v2(nums: list[int]) -> int:
         prevprev, prev = prev, max(prevprev+nums[i], prev)
 
     return prev
+
+
+@time_execution(executions=1000)
+def sol_dp_v3(nums: list[int]) -> int:
+    prevprev, prev = 0, 0
+
+    for num in nums:
+        prevprev, prev = prev, max(prevprev+num, prev)
+
+    return prev
+
+
+@time_execution()
+def sol_taiL_rec(nums: list[int]) -> int:
+    def helper(i: int, prevprev: int = 0, prev: int = 0):
+        if i == len(nums):
+            return prev
+
+        return helper(i+1, prev, max(nums[i]+prevprev, prev))
+
+    return helper(0)
 
 
 @time_execution()
