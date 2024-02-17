@@ -1,18 +1,17 @@
 import pytest
-from src.coin_change import *
+from src.missing_number import *
 
 test_cases = [
-    (([1, 2, 5], 11), 3),
-    (([2], 3), -1),
-    (([7, 5, 10], 23), -1),
-    (([1], 0), 0),
+    ([3, 0, 1], 2),
+    ([0, 1], 2),
+    ([9, 6, 4, 2, 3, 5, 7, 0, 1], 8),
 ]
 
 functions = [globals()[name] for name in dir() if 'sol' in name]
 
 
 @pytest.mark.parametrize("test_input,expected", test_cases)
-def test_coin_change(test_input, expected):
+def test_missing_number(test_input, expected):
     print(f"\nFor input {test_input}")
     for func in functions:
-        assert func(*test_input) == expected
+        assert func(test_input) == expected
