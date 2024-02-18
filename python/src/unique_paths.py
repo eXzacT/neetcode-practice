@@ -34,11 +34,8 @@ def sol_dp_v2(m: int, n: int) -> int:
 
     # We can reach any other position with sum ways of reach its above and left positions
     for _ in range(m-1):
-        temp = prev_row
         for j in range(1, n):
-            temp[j] = temp[j-1]+prev_row[j]
-
-        prev_row = temp
+            prev_row[j] = prev_row[j-1]+prev_row[j]  # Modify in place
 
     return prev_row[-1]
 
@@ -104,6 +101,42 @@ def sol_memo_v2(m: int, n: int) -> int:
 
         memo[key] = helper(i+1, j)+helper(i, j+1)
         return memo[key]
+
+    return helper(0, 0)
+
+
+@time_execution()
+def sol_rec_v3(m: int, n: int) -> int:
+    def helper(x, y):
+        if x == m-1 and y == n-1:
+            return 1
+
+        ways = 0
+        for dx, dy in [(0, 1), (1, 0)]:
+            if 0 <= x + dx < m and 0 <= y + dy < n:
+                ways += helper(x + dx, y + dy)
+
+        return ways
+
+    return helper(0, 0)
+
+
+@time_execution()
+def sol_memo_v3(m: int, n: int) -> int:
+    memo = {(m-1, n-1): 1}
+
+    def helper(x, y):
+        key = (x, y)
+        if key in memo:
+            return memo[key]
+
+        ways = 0
+        for dx, dy in [(0, 1), (1, 0)]:
+            if 0 <= x + dx < m and 0 <= y + dy < n:
+                ways += helper(x + dx, y + dy)
+
+        memo[key] = ways
+        return ways
 
     return helper(0, 0)
 

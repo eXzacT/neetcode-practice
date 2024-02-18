@@ -46,15 +46,21 @@ def sol_dp_v2(nums: list[int], target: int) -> int:
     if nums_sum < abs(target) or (target+nums_sum) % 2 != 0:
         return 0
     else:
+        # target=sum_p-sum_n, total_sum=sum_p+sum_n, we have these 2 equations and we want to find sum_p
+
+        # target+total_sum=sum_p+sum_p
+        # 2*sum_p=target+total_sum  : /2
+        # sum_p=(target+total_sum)/2
         sum_p = (target+nums_sum)//2
 
+    # So to find how many ways we can sum up to target using nums, we need to find ways to sum up to sum_p
     dp = [0]*(sum_p+1)
     dp[0] = 1
     for num in nums:
         for i in range(sum_p, num-1, -1):
             dp[i] = dp[i]+dp[i-num]
 
-    return dp[sum_p]
+    return dp[-1]
 
 
 @time_execution()
