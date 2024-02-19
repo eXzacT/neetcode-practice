@@ -13,34 +13,43 @@ else:
 
 @time_execution()
 def sol_dp(prices: list[int]) -> int:
-    # On day 1 we could have either skipped buying or bought the first stock
-    dp = [[0, 0] for _ in range(len(prices))]
-    dp[0] = [0, -prices[0]]
+    n = len(prices)
 
-    for i in range(1, len(prices)):
-        dp[i][0] = max(dp[i - 1][0], dp[i - 1][1] + prices[i])
-        dp[i][1] = max(dp[i - 1][1], dp[i - 2][0] - prices[i]
-                       if i >= 2 else -prices[i])
+    if n == 1:
+        return 0
 
-    return dp[-1][0]
+    buy = [0]*n
+    sell = [0]*n
+
+    # Which day was better to buy, day 1 or day 2, also was it worth selling on day 2?
+    buy[1] = max(-prices[0], -prices[1])
+    sell[1] = max(0, -prices[0]+prices[1])
+
+    # For all the other days we do this(technically the formula is same for day 2 except for buying), because on day 1 we couldn't have possibly come from day -1(2 days before)
+    # To reach sell[i] we could have come here from same profit we had yesterday OR sell what we bought previously
+    # To reach buy[i] we could have come here from holding what we have bought previously OR from selling 2 days ago
+    for i in range(2, len(prices)):  # Start from day 3
+        sell[i] = max(sell[i-1], buy[i-1]+prices[i])
+        buy[i] = max(buy[i-1], sell[i-2]-prices[i])
+
+    return sell[-1]
 
 
 @time_execution()
 def sol_dp_v2(prices: list[int]) -> int:
+    '''Same as above but with O(1) memory'''
     if len(prices) == 1:
         return 0
 
-    # On day 1, we could have skipped or invested money
-    prevprev = [0, -prices[0]]
-    # On day 2, we pick the best between not buying on either day or buying on first and selling today
-    # Also remember which day was cheaper(max because the values are negated)
-    prev = [max(0, prevprev[1]+prices[1]), max(prevprev[1], -prices[1])]
+    prevprev_sell = 0  # Day 1
+    # Which day was better to buy, day 1 or day 2, also was it worth selling on day 2?
+    prev_buy, prev_sell = max(-prices[0], -prices[1]), max(0, -prices[0]+prices[1])\
 
     for i in range(2, len(prices)):  # Start from day 3
-        prevprev, prev = prev, [
-            max(prev[0], prev[1]+prices[i]), max(prev[1], prevprev[0]-prices[i])]
+        prevprev_sell, prev_sell, prev_buy = prev_sell, max(
+            prev_sell, prev_buy+prices[i]), max(prev_buy, prevprev_sell-prices[i])
 
-    return prev[0]
+    return prev_sell
 
 
 @time_execution()
