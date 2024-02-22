@@ -86,6 +86,7 @@ def sol_space_optimized(matrix: list[list[int]]) -> list[int]:
             x, y = x-d[0], y-d[1]  # Step backwards using direction
             d = rotate_90_clockwise(d)
             x, y = x+d[0], y+d[1]  # Step forwards using new direction
+            # We've reached the end of the spiral since even by rotating 90 degrees we still hit a "wall"
             if y < left or y >= right or x < top or x >= bottom:
                 return res
 
