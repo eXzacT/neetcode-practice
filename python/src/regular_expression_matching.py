@@ -11,7 +11,7 @@ else:
 The matching should cover the entire input string (not partial).'''
 
 
-@time_execution()
+# @time_execution()
 def sol_dp(s: str, p: str) -> bool:
     WIDTH = len(p) + 1
     HEIGHT = len(s) + 1
@@ -21,13 +21,14 @@ def sol_dp(s: str, p: str) -> bool:
     # For an empty string 's' the only way to match it with a non empty pattern is if after every character there's a star
     for j in range(1, WIDTH):
         if p[j-1] == '*':
-            # p="a*" [0][1]=False(because a by itself) [0][2]=True(because * after a)
+            # p="a*" -> [0][1]=False(because a by itself) [0][2]=True(because * after a)
             dp[0][j] = dp[0][j-2]
 
     for i in range(1, HEIGHT):
         for j in range(1, WIDTH):
             if p[j-1] == '*':
-                # Zero occurrences of preceding character or one/more occurrences
+                # We could have possibly come here from same row, 2 cols to the left(Essentially ignoring the character before *)
+                # OR from the previous row, meaning we matched whatever the character before * was
                 dp[i][j] = dp[i][j - 2] or \
                     ((s[i - 1] == p[j - 2] or p[j - 2] == '.') and dp[i-1][j])
             else:
@@ -36,6 +37,36 @@ def sol_dp(s: str, p: str) -> bool:
                 dp[i][j] = match and dp[i - 1][j - 1]
 
     return dp[-1][-1]
+
+
+@time_execution()
+def sol_dp_v2(s: str, p: str) -> bool:
+    WIDTH = len(p) + 1
+    HEIGHT = len(s) + 1
+    prev = [False] * WIDTH
+    prev[0] = True  # Empty string matches empty pattern
+
+    # For an empty string 's' the only way to match it with a non empty pattern is if after every character there's a star
+    for j in range(1, WIDTH):
+        if p[j-1] == '*':
+            # p="a*" -> [0][1]=False(because a by itself) [0][2]=True(because * after a)
+            prev[j] = prev[j-2]
+
+    for i in range(1, HEIGHT):
+        curr = [False]*WIDTH
+        for j in range(1, WIDTH):
+            if p[j-1] == '*':
+                # Zero occurrences of preceding character or one/more occurrences
+                curr[j] = curr[j - 2] or \
+                    ((s[i - 1] == p[j - 2] or p[j - 2] == '.') and prev[j])
+            else:
+                match = s[i - 1] == p[j - 1] or p[j - 1] == '.'
+                # Current characters match and there was a match so far
+                curr[j] = match and prev[j - 1]
+
+        prev = curr
+
+    return prev[-1]
 
 
 @time_execution()
