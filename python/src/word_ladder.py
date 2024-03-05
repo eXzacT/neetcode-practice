@@ -75,6 +75,68 @@ def sol_bfs(s1: str, s2: str, words: list) -> int:
 
 
 @time_execution()
+def sol_bfs_v2(s1: str, s2: str, words: list) -> int:
+    words_set = set(words)
+    if s2 not in words_set:
+        return 0
+
+    queue = deque([s1])
+    length = 1
+
+    while queue:
+        for _ in range(len(queue)):
+            curr = queue.popleft()
+            if curr == s2:
+                return length
+
+            for i in range(len(curr)):
+                for c in 'abcdefghijklmnopqrstuvwxyz':
+                    # Generate a word that only has 1 different character and is of same length
+                    next_word = curr[:i] + c + curr[i+1:]
+                    if next_word in words_set:
+                        queue.append(next_word)
+                        words_set.remove(next_word)
+
+        length += 1
+
+    return 0
+
+
+@time_execution()
+def sol_two_sets(s1: str, s2: str, words: list) -> int:
+    if s2 not in (words_set := set(words)):
+        return 0
+
+    words1, words2 = set((s1, )), set((s2, ))
+    words_set.discard(s1)
+    words_set.discard(s2)
+    counts = 2  # Start the count from 2 since we have s1 and s2
+
+    while words1 and words2:
+        # We're doing BFS from the smaller set and matching a larger set(bigger chance of hitting the result)
+        if len(words1) > len(words2):
+            words1, words2 = words2, words1
+
+        temp = set()
+        for word in words1:  # For every word in the first set we traverse to its next word, basically BFS
+            for i in range(len(word)):
+                for c in "abcdefghijklmnopqrstuvwxyz":
+                    new_word = word[:i]+c+word[i+1:]
+                    if new_word in words2:  # Reached the end
+                        return counts
+                    # Can transform the word to a new one
+                    if new_word in words_set:
+                        temp.add(new_word)
+                        # First time we see any new words we can remove them from the set since we found the fastest way to get to them
+                        words_set.remove(new_word)
+
+        words1 = temp
+        counts += 1  # Level of the bfs traversal
+
+    return 0  # Couldn't reach the 's2' word
+
+
+@time_execution()
 def sol_nx(s1: str, s2: str, words: list) -> int:
     if s2 not in words:
         return 0
