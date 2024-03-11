@@ -53,3 +53,8 @@ def sol_optimized(tasks: list[str], n: int) -> int:
         tasks_with_max_occurrences
 
     return max(min_time_needed, len(tasks))
+
+
+def test():
+    # testing push nickname
+    pass
