@@ -1,5 +1,3 @@
-import heapq
-
 if __name__ == "__main__":
     from common import time_execution
 else:
